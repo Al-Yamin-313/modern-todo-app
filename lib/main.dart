@@ -17,60 +17,74 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xFF0F4C3A),
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: const CalendarScreen(),
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class CalendarScreen extends StatelessWidget {
+  const CalendarScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Text(
+                'Calendar',
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                'July 2026',
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              const SizedBox(height: 20),
+
+              // Calendar Horizontal Day Strip
               Row(
                 mainAxisAlignment: MainAxisAlignment.between,
                 children: [
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Good Morning 👋', style: TextStyle(fontSize: 14, color: Colors.grey)),
-                      Text('John Doe', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                      Text('Friday, July 3', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                    ],
-                  ),
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: const Color(0xFF0F4C3A).withOpacity(0.1),
-                    child: const Text('JD', style: TextStyle(color: Color(0xFF0F4C3A), fontWeight: FontWeight.bold)),
-                  )
+                  _buildCalendarDay('Fri', '3', true),
+                  _buildCalendarDay('Sat', '4', false),
+                  _buildCalendarDay('Sun', '5', false),
+                  _buildCalendarDay('Mon', '6', false),
+                  _buildCalendarDay('Tue', '7', false),
                 ],
               ),
-              const SizedBox(height: 20),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search tasks...',
-                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+              const SizedBox(height: 30),
+
+              const Text(
+                'Friday, July 3',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 15),
+
+              // Calendar Task Card Item
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
                 ),
-              ),
-              const SizedBox(height: 25),
-              Row(
-                children: [
-                  _buildStatCard('12', 'Total Tasks', Colors.black),
-                  const SizedBox(width: 12),
-                  _buildStatCard('8', 'Completed', const Color(0xFF0F4C3A)),
-                  const SizedBox(width: 12),
-                  _buildStatCard('4', 'Pending', Colors.orange),
-                ],
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Review Prototype Bundle With Team',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Go over the .dc.html bundle files shared by the supervisor.',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -79,19 +93,25 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String value, String label, Color valueColor) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: valueColor)),
-            const SizedBox(height: 4),
-            Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-          ],
-        ),
+  Widget _buildCalendarDay(String dayLabel, String dayNum, bool isSelected) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: isSelected ? const Color(0xFF0F4C3A) : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Text(
+            dayLabel,
+            style: TextStyle(color: isSelected ? Colors.white70 : Colors.grey, fontSize: 12),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            dayNum,
+            style: TextStyle(color: isSelected ? Colors.white : Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }
