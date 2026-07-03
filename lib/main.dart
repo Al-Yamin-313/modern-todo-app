@@ -41,7 +41,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const HomeScreen(), // Index 0: Home (Your Screen)
     const Scaffold(body: Center(child: Text('Tasks Screen (Tahmid)'))), // Index 1: Tasks
     const CalendarScreen(), // Index 2: Calendar (Your Bonus Screen)
-    const Scaffold(body: Center(child: Text('Profile Screen (Nadim)'))), // Index 3: Profile
+    const ProfileScreen(), // Index 3: Profile
   ];
 
   @override
@@ -82,7 +82,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.between,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,7 +147,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 25),
               Row(
-                mainAxisAlignment: MainAxisAlignment.between,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     'Recent Tasks',
@@ -266,7 +266,7 @@ class CalendarScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.between,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _buildCalendarDay('Fri', '3', true),
                   _buildCalendarDay('Sat', '4', false),
@@ -329,6 +329,174 @@ class CalendarScreen extends StatelessWidget {
             style: TextStyle(color: isSelected ? Colors.white : Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  Widget buildMenuItem(IconData icon, String title) {
+    return Column(
+      children: [
+        ListTile(
+          leading: Icon(icon, color: const Color(0xFF0F4C3A)),
+          title: Text(title),
+          trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+          onTap: () {},
+        ),
+        const Divider(height: 1),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF7F9FA),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+
+              // Profile Picture
+              const CircleAvatar(
+                radius: 45,
+                backgroundColor: Color(0xFFDCEFE6),
+                child: Icon(
+                  Icons.person,
+                  size: 50,
+                  color: Color(0xFF0F4C3A),
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
+              const Text(
+                "John Doe",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 5),
+
+              Text(
+                "john.doe@email.com",
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 15,
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              // Statistics
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 18),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.15),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          "24",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text("Completed"),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          "8",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text("Pending"),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          "32",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text("Total Tasks"),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              // Settings Card
+              Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  children: [
+                    buildMenuItem(Icons.person_outline, "Personal Information"),
+                    buildMenuItem(Icons.notifications_none, "Notifications"),
+                    buildMenuItem(Icons.lock_outline, "Privacy & Security"),
+                    buildMenuItem(Icons.help_outline, "Help & Support"),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 35),
+
+              // Logout Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.logout),
+                  label: const Text("Logout"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0F4C3A),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
       ),
     );
   }
