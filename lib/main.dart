@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 void main() {
   runApp(const MyApp());
 }
@@ -38,10 +37,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   // Ordered strictly according to the supervisor's navigation bar design serial
   final List<Widget> _screens = [
-    const HomeScreen(), // Index 0: Home (Your Screen)
-    const Scaffold(body: Center(child: Text('Tasks Screen (Tahmid)'))), // Index 1: Tasks
-    const CalendarScreen(), // Index 2: Calendar (Your Bonus Screen)
-    const Scaffold(body: Center(child: Text('Profile Screen (Nadim)'))), // Index 3: Profile
+    const HomeScreen(),
+    const TasksScreen(),
+    const CalendarScreen(),
+    const Scaffold(body: Center(child: Text('Profile Screen (Nadim)'))),
   ];
 
   @override
@@ -82,7 +81,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.between,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,7 +146,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 25),
               Row(
-                mainAxisAlignment: MainAxisAlignment.between,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     'Recent Tasks',
@@ -172,6 +171,7 @@ class HomeScreen extends StatelessWidget {
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     )
+
                   ],
                 ),
                 child: Column(
@@ -266,7 +266,7 @@ class CalendarScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.between,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _buildCalendarDay('Fri', '3', true),
                   _buildCalendarDay('Sat', '4', false),
@@ -327,6 +327,299 @@ class CalendarScreen extends StatelessWidget {
           Text(
             dayNum,
             style: TextStyle(color: isSelected ? Colors.white : Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class Task {
+  String title;
+  String subtitle;
+  String priority;
+  Color priorityColor;
+  String date;
+  String category;
+  bool isCompleted;
+
+  Task({
+    required this.title,
+    required this.subtitle,
+    required this.priority,
+    required this.priorityColor,
+    required this.date,
+    required this.category,
+    required this.isCompleted,
+  });
+}
+
+class TasksScreen extends StatefulWidget {
+  const TasksScreen({super.key});
+
+  @override
+  State<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
+  int selectedFilter = 0;
+
+  final List<Task> tasks = [
+    Task(
+      title: "Design Homepage",
+      subtitle: "Finish hero section",
+      priority: "High",
+      priorityColor: Colors.red,
+      date: "Today",
+      category: "Work",
+      isCompleted: false,
+    ),
+
+    Task(
+      title: "Grocery Shopping",
+      subtitle: "Buy weekly essentials",
+      priority: "Medium",
+      priorityColor: Colors.orange,
+      date: "Tomorrow",
+      category: "Shopping",
+      isCompleted: true,
+    ),
+
+    Task(
+      title: "Read Chapter 5",
+      subtitle: "Data Structures notes",
+      priority: "Low",
+      priorityColor: Colors.green,
+      date: "Today",
+      category: "Study",
+      isCompleted: false,
+    ),
+
+    Task(
+      title: "Morning Run",
+      subtitle: "5km around the park",
+      priority: "Medium",
+      priorityColor: Colors.orange,
+      date: "Today",
+      category: "Fitness",
+      isCompleted: false,
+    ),
+
+    Task(
+      title: "Call Mom",
+      subtitle: "Weekly catch-up",
+      priority: "Low",
+      priorityColor: Colors.green,
+      date: "Tomorrow",
+      category: "Personal",
+      isCompleted: true,
+    ),
+
+    Task(
+      title: "Submit Report",
+      subtitle: "Q3 performance review",
+      priority: "High",
+      priorityColor: Colors.red,
+      date: "Fri, Jul 5",
+      category: "Work",
+      isCompleted: false,
+    ),
+
+    Task(
+      title: "Meal Prep",
+      subtitle: "Prepare lunches for the week",
+      priority: "Medium",
+      priorityColor: Colors.orange,
+      date: "Sat, Jul 6",
+      category: "Personal",
+      isCompleted: false,
+    ),
+  ];
+
+  List<Task> get filteredTasks {
+    if (selectedFilter == 0) {
+      return tasks;
+    } else if (selectedFilter == 1) {
+      return tasks.where((task) => task.isCompleted).toList();
+    } else {
+      return tasks.where((task) => !task.isCompleted).toList();
+    }
+  }
+@override
+Widget build(BuildContext context) {
+return Scaffold(
+backgroundColor: const Color(0xffF5F7F8),
+body: SafeArea(
+child: SingleChildScrollView(
+padding: const EdgeInsets.all(20),
+child: Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+const Text(
+"My Tasks",
+style: TextStyle(
+fontSize: 32,
+fontWeight: FontWeight.bold,
+),
+),
+
+const SizedBox(height: 20),
+
+Row(
+children: [
+buildFilterChip("All", 0),
+const SizedBox(width: 10),
+buildFilterChip("Completed", 1),
+const SizedBox(width: 10),
+buildFilterChip("Pending", 2),
+],
+),
+
+const SizedBox(height: 25),
+
+ListView.builder(
+itemCount: filteredTasks.length,
+shrinkWrap: true,
+physics: const NeverScrollableScrollPhysics(),
+itemBuilder: (context, index) {
+final task = filteredTasks[index];
+
+return buildTaskCard(
+task: task,
+onChanged: () {
+setState(() {
+task.isCompleted = !task.isCompleted;
+});
+},
+);
+},
+),
+],
+),
+),
+),
+);
+}
+  Widget buildFilterChip(String title, int index) {
+    return ChoiceChip(
+      label: Text(
+        title,
+        style: TextStyle(
+          color: selectedFilter == index ? Colors.white : Colors.black,
+        ),
+      ),
+      selected: selectedFilter == index,
+      selectedColor: Colors.teal,
+      onSelected: (value) {
+        setState(() {
+          selectedFilter = index;
+        });
+      },
+    );
+  }
+
+  Widget buildTaskCard({
+    required Task task,
+    required VoidCallback onChanged,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 8,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: onChanged,
+            child: Icon(
+              task.isCompleted
+                  ? Icons.check_circle
+                  : Icons.radio_button_unchecked,
+              color: task.isCompleted ? Colors.teal : Colors.grey,
+              size: 30,
+            ),
+          ),
+
+          const SizedBox(width: 15),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  task.title,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    decoration: task.isCompleted
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                  ),
+                ),
+
+                const SizedBox(height: 5),
+
+                Text(
+                  task.subtitle,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    decoration: task.isCompleted
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: task.priorityColor.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        task.priority,
+                        style: TextStyle(
+                          color: task.priorityColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 12),
+
+                    Expanded(
+                      child: Text(
+                        "${task.date} • ${task.category}",
+                        style: const TextStyle(color: Colors.grey),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          const Icon(
+            Icons.more_vert,
+            color: Colors.grey,
           ),
         ],
       ),
